@@ -4,6 +4,10 @@ All URIs are relative to *https://api.optioffice.local/v1*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**authRegisterPost**](DefaultAPI.md#authregisterpost) | **POST** /auth/register | Register user
+[**authVerifyPost**](DefaultAPI.md#authverifypost) | **POST** /auth/verify | Verify registration
+[**orgsIdGet**](DefaultAPI.md#orgsidget) | **GET** /orgs/{id} | Get organization
+[**orgsIdPatch**](DefaultAPI.md#orgsidpatch) | **PATCH** /orgs/{id} | Update organization
 [**orgsOrgIdDocumentsDocumentIdDelete**](DefaultAPI.md#orgsorgiddocumentsdocumentiddelete) | **DELETE** /orgs/{orgId}/documents/{documentId} | Delete document
 [**orgsOrgIdDocumentsDocumentIdGet**](DefaultAPI.md#orgsorgiddocumentsdocumentidget) | **GET** /orgs/{orgId}/documents/{documentId} | Get document
 [**orgsOrgIdDocumentsDocumentIdPut**](DefaultAPI.md#orgsorgiddocumentsdocumentidput) | **PUT** /orgs/{orgId}/documents/{documentId} | Update document
@@ -29,7 +33,208 @@ Method | HTTP request | Description
 [**orgsOrgIdPaymentsPaymentIdGet**](DefaultAPI.md#orgsorgidpaymentspaymentidget) | **GET** /orgs/{orgId}/payments/{paymentId} | Get payment
 [**orgsOrgIdPaymentsPaymentIdPut**](DefaultAPI.md#orgsorgidpaymentspaymentidput) | **PUT** /orgs/{orgId}/payments/{paymentId} | Update payment
 [**orgsOrgIdPaymentsPost**](DefaultAPI.md#orgsorgidpaymentspost) | **POST** /orgs/{orgId}/payments | Create payment
+[**orgsPost**](DefaultAPI.md#orgspost) | **POST** /orgs | Create organization
 
+
+# **authRegisterPost**
+```swift
+    open class func authRegisterPost(registerRequest: RegisterRequest, completion: @escaping (_ data: RegisterResponse?, _ error: Error?) -> Void)
+```
+
+Register user
+
+Registers a new user account. No access or refresh tokens are issued. If verification is required the endpoint returns `202` and the user must call `POST /auth/verify` before logging in to obtain tokens. See [Authentication & Authorization](authn-authz.md#registration--login) for flow details and [Device Binding](authn-authz.md#device-binding). 
+
+### Example
+```swift
+// The following code samples are still beta. For any issue, please report via http://github.com/OpenAPITools/openapi-generator/issues/new
+import OptiOfficeSDK
+
+let registerRequest = RegisterRequest(email: "email_example", password: "password_example", deviceId: "deviceId_example", name: "name_example") // RegisterRequest | 
+
+// Register user
+DefaultAPI.authRegisterPost(registerRequest: registerRequest) { (response, error) in
+    guard error == nil else {
+        print(error)
+        return
+    }
+
+    if (response) {
+        dump(response)
+    }
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **registerRequest** | [**RegisterRequest**](RegisterRequest.md) |  | 
+
+### Return type
+
+[**RegisterResponse**](RegisterResponse.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json, application/problem+json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **authVerifyPost**
+```swift
+    open class func authVerifyPost(verifyRequest: VerifyRequest, completion: @escaping (_ data: Void?, _ error: Error?) -> Void)
+```
+
+Verify registration
+
+Verifies a user's email address using a token. Successful verification enables login to receive access and refresh tokens. See [Authentication & Authorization](authn-authz.md#registration--login) for flow details. 
+
+### Example
+```swift
+// The following code samples are still beta. For any issue, please report via http://github.com/OpenAPITools/openapi-generator/issues/new
+import OptiOfficeSDK
+
+let verifyRequest = VerifyRequest(token: "token_example") // VerifyRequest | 
+
+// Verify registration
+DefaultAPI.authVerifyPost(verifyRequest: verifyRequest) { (response, error) in
+    guard error == nil else {
+        print(error)
+        return
+    }
+
+    if (response) {
+        dump(response)
+    }
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **verifyRequest** | [**VerifyRequest**](VerifyRequest.md) |  | 
+
+### Return type
+
+Void (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/problem+json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **orgsIdGet**
+```swift
+    open class func orgsIdGet(id: String, completion: @escaping (_ data: Organization?, _ error: Error?) -> Void)
+```
+
+Get organization
+
+### Example
+```swift
+// The following code samples are still beta. For any issue, please report via http://github.com/OpenAPITools/openapi-generator/issues/new
+import OptiOfficeSDK
+
+let id = "id_example" // String | 
+
+// Get organization
+DefaultAPI.orgsIdGet(id: id) { (response, error) in
+    guard error == nil else {
+        print(error)
+        return
+    }
+
+    if (response) {
+        dump(response)
+    }
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String** |  | 
+
+### Return type
+
+[**Organization**](Organization.md)
+
+### Authorization
+
+[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json, application/problem+json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **orgsIdPatch**
+```swift
+    open class func orgsIdPatch(id: String, organizationUpdate: OrganizationUpdate, completion: @escaping (_ data: Organization?, _ error: Error?) -> Void)
+```
+
+Update organization
+
+Updates organization details. Only organization owners or administrators may patch. See [Authorization](#authorization) and [Error Model](#error-model). 
+
+### Example
+```swift
+// The following code samples are still beta. For any issue, please report via http://github.com/OpenAPITools/openapi-generator/issues/new
+import OptiOfficeSDK
+
+let id = "id_example" // String | 
+let organizationUpdate = OrganizationUpdate(name: "name_example", description: "description_example") // OrganizationUpdate | 
+
+// Update organization
+DefaultAPI.orgsIdPatch(id: id, organizationUpdate: organizationUpdate) { (response, error) in
+    guard error == nil else {
+        print(error)
+        return
+    }
+
+    if (response) {
+        dump(response)
+    }
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String** |  | 
+ **organizationUpdate** | [**OrganizationUpdate**](OrganizationUpdate.md) |  | 
+
+### Return type
+
+[**Organization**](Organization.md)
+
+### Authorization
+
+[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json, application/problem+json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **orgsOrgIdDocumentsDocumentIdDelete**
 ```swift
@@ -1278,6 +1483,56 @@ Void (empty response body)
 
  - **Content-Type**: application/json
  - **Accept**: Not defined
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **orgsPost**
+```swift
+    open class func orgsPost(organizationCreate: OrganizationCreate, completion: @escaping (_ data: Organization?, _ error: Error?) -> Void)
+```
+
+Create organization
+
+Creates a new organization. Requires an authenticated user; the creator becomes its owner. See [Authorization](#authorization) and [Error Model](#error-model). 
+
+### Example
+```swift
+// The following code samples are still beta. For any issue, please report via http://github.com/OpenAPITools/openapi-generator/issues/new
+import OptiOfficeSDK
+
+let organizationCreate = OrganizationCreate(name: "name_example", description: "description_example") // OrganizationCreate | 
+
+// Create organization
+DefaultAPI.orgsPost(organizationCreate: organizationCreate) { (response, error) in
+    guard error == nil else {
+        print(error)
+        return
+    }
+
+    if (response) {
+        dump(response)
+    }
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **organizationCreate** | [**OrganizationCreate**](OrganizationCreate.md) |  | 
+
+### Return type
+
+[**Organization**](Organization.md)
+
+### Authorization
+
+[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json, application/problem+json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

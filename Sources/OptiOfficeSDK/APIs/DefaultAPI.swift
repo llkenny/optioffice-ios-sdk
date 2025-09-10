@@ -16,6 +16,195 @@ extension OptiOfficeSDKAPI {
 open class DefaultAPI {
 
     /**
+     Register user
+     
+     - parameter registerRequest: (body)  
+     - parameter apiResponseQueue: The queue on which api response is dispatched.
+     - parameter completion: completion handler to receive the data and the error objects
+     */
+    @discardableResult
+    open class func authRegisterPost(registerRequest: RegisterRequest, apiResponseQueue: DispatchQueue = OptiOfficeSDKAPI.apiResponseQueue, completion: @escaping ((_ data: RegisterResponse?, _ error: Error?) -> Void)) -> RequestTask {
+        return authRegisterPostWithRequestBuilder(registerRequest: registerRequest).execute(apiResponseQueue) { result in
+            switch result {
+            case let .success(response):
+                completion(response.body, nil)
+            case let .failure(error):
+                completion(nil, error)
+            }
+        }
+    }
+
+    /**
+     Register user
+     - POST /auth/register
+     - Registers a new user account. No access or refresh tokens are issued. If verification is required the endpoint returns `202` and the user must call `POST /auth/verify` before logging in to obtain tokens. See [Authentication & Authorization](authn-authz.md#registration--login) for flow details and [Device Binding](authn-authz.md#device-binding). 
+     - parameter registerRequest: (body)  
+     - returns: RequestBuilder<RegisterResponse?> 
+     */
+    open class func authRegisterPostWithRequestBuilder(registerRequest: RegisterRequest) -> RequestBuilder<RegisterResponse?> {
+        let localVariablePath = "/auth/register"
+        let localVariableURLString = OptiOfficeSDKAPI.basePath + localVariablePath
+        let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: registerRequest)
+
+        let localVariableUrlComponents = URLComponents(string: localVariableURLString)
+
+        let localVariableNillableHeaders: [String: Any?] = [
+            "Content-Type": "application/json",
+        ]
+
+        let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
+
+        let localVariableRequestBuilder: RequestBuilder<RegisterResponse?>.Type = OptiOfficeSDKAPI.requestBuilderFactory.getBuilder()
+
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+    }
+
+    /**
+     Verify registration
+     
+     - parameter verifyRequest: (body)  
+     - parameter apiResponseQueue: The queue on which api response is dispatched.
+     - parameter completion: completion handler to receive the data and the error objects
+     */
+    @discardableResult
+    open class func authVerifyPost(verifyRequest: VerifyRequest, apiResponseQueue: DispatchQueue = OptiOfficeSDKAPI.apiResponseQueue, completion: @escaping ((_ data: Void?, _ error: Error?) -> Void)) -> RequestTask {
+        return authVerifyPostWithRequestBuilder(verifyRequest: verifyRequest).execute(apiResponseQueue) { result in
+            switch result {
+            case .success:
+                completion((), nil)
+            case let .failure(error):
+                completion(nil, error)
+            }
+        }
+    }
+
+    /**
+     Verify registration
+     - POST /auth/verify
+     - Verifies a user's email address using a token. Successful verification enables login to receive access and refresh tokens. See [Authentication & Authorization](authn-authz.md#registration--login) for flow details. 
+     - parameter verifyRequest: (body)  
+     - returns: RequestBuilder<Void> 
+     */
+    open class func authVerifyPostWithRequestBuilder(verifyRequest: VerifyRequest) -> RequestBuilder<Void> {
+        let localVariablePath = "/auth/verify"
+        let localVariableURLString = OptiOfficeSDKAPI.basePath + localVariablePath
+        let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: verifyRequest)
+
+        let localVariableUrlComponents = URLComponents(string: localVariableURLString)
+
+        let localVariableNillableHeaders: [String: Any?] = [
+            "Content-Type": "application/json",
+        ]
+
+        let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
+
+        let localVariableRequestBuilder: RequestBuilder<Void>.Type = OptiOfficeSDKAPI.requestBuilderFactory.getNonDecodableBuilder()
+
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+    }
+
+    /**
+     Get organization
+     
+     - parameter id: (path)  
+     - parameter apiResponseQueue: The queue on which api response is dispatched.
+     - parameter completion: completion handler to receive the data and the error objects
+     */
+    @discardableResult
+    open class func orgsIdGet(id: String, apiResponseQueue: DispatchQueue = OptiOfficeSDKAPI.apiResponseQueue, completion: @escaping ((_ data: Organization?, _ error: Error?) -> Void)) -> RequestTask {
+        return orgsIdGetWithRequestBuilder(id: id).execute(apiResponseQueue) { result in
+            switch result {
+            case let .success(response):
+                completion(response.body, nil)
+            case let .failure(error):
+                completion(nil, error)
+            }
+        }
+    }
+
+    /**
+     Get organization
+     - GET /orgs/{id}
+     - Bearer Token:
+       - type: http
+       - name: bearerAuth
+     - parameter id: (path)  
+     - returns: RequestBuilder<Organization> 
+     */
+    open class func orgsIdGetWithRequestBuilder(id: String) -> RequestBuilder<Organization> {
+        var localVariablePath = "/orgs/{id}"
+        let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
+        let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
+        localVariablePath = localVariablePath.replacingOccurrences(of: "{id}", with: idPostEscape, options: .literal, range: nil)
+        let localVariableURLString = OptiOfficeSDKAPI.basePath + localVariablePath
+        let localVariableParameters: [String: Any]? = nil
+
+        let localVariableUrlComponents = URLComponents(string: localVariableURLString)
+
+        let localVariableNillableHeaders: [String: Any?] = [
+            :
+        ]
+
+        let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
+
+        let localVariableRequestBuilder: RequestBuilder<Organization>.Type = OptiOfficeSDKAPI.requestBuilderFactory.getBuilder()
+
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
+    }
+
+    /**
+     Update organization
+     
+     - parameter id: (path)  
+     - parameter organizationUpdate: (body)  
+     - parameter apiResponseQueue: The queue on which api response is dispatched.
+     - parameter completion: completion handler to receive the data and the error objects
+     */
+    @discardableResult
+    open class func orgsIdPatch(id: String, organizationUpdate: OrganizationUpdate, apiResponseQueue: DispatchQueue = OptiOfficeSDKAPI.apiResponseQueue, completion: @escaping ((_ data: Organization?, _ error: Error?) -> Void)) -> RequestTask {
+        return orgsIdPatchWithRequestBuilder(id: id, organizationUpdate: organizationUpdate).execute(apiResponseQueue) { result in
+            switch result {
+            case let .success(response):
+                completion(response.body, nil)
+            case let .failure(error):
+                completion(nil, error)
+            }
+        }
+    }
+
+    /**
+     Update organization
+     - PATCH /orgs/{id}
+     - Updates organization details. Only organization owners or administrators may patch. See [Authorization](#authorization) and [Error Model](#error-model). 
+     - Bearer Token:
+       - type: http
+       - name: bearerAuth
+     - parameter id: (path)  
+     - parameter organizationUpdate: (body)  
+     - returns: RequestBuilder<Organization> 
+     */
+    open class func orgsIdPatchWithRequestBuilder(id: String, organizationUpdate: OrganizationUpdate) -> RequestBuilder<Organization> {
+        var localVariablePath = "/orgs/{id}"
+        let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
+        let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
+        localVariablePath = localVariablePath.replacingOccurrences(of: "{id}", with: idPostEscape, options: .literal, range: nil)
+        let localVariableURLString = OptiOfficeSDKAPI.basePath + localVariablePath
+        let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: organizationUpdate)
+
+        let localVariableUrlComponents = URLComponents(string: localVariableURLString)
+
+        let localVariableNillableHeaders: [String: Any?] = [
+            "Content-Type": "application/json",
+        ]
+
+        let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
+
+        let localVariableRequestBuilder: RequestBuilder<Organization>.Type = OptiOfficeSDKAPI.requestBuilderFactory.getBuilder()
+
+        return localVariableRequestBuilder.init(method: "PATCH", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
+    }
+
+    /**
      Delete document
      
      - parameter orgId: (path)  
@@ -1331,6 +1520,53 @@ open class DefaultAPI {
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
         let localVariableRequestBuilder: RequestBuilder<Void>.Type = OptiOfficeSDKAPI.requestBuilderFactory.getNonDecodableBuilder()
+
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
+    }
+
+    /**
+     Create organization
+     
+     - parameter organizationCreate: (body)  
+     - parameter apiResponseQueue: The queue on which api response is dispatched.
+     - parameter completion: completion handler to receive the data and the error objects
+     */
+    @discardableResult
+    open class func orgsPost(organizationCreate: OrganizationCreate, apiResponseQueue: DispatchQueue = OptiOfficeSDKAPI.apiResponseQueue, completion: @escaping ((_ data: Organization?, _ error: Error?) -> Void)) -> RequestTask {
+        return orgsPostWithRequestBuilder(organizationCreate: organizationCreate).execute(apiResponseQueue) { result in
+            switch result {
+            case let .success(response):
+                completion(response.body, nil)
+            case let .failure(error):
+                completion(nil, error)
+            }
+        }
+    }
+
+    /**
+     Create organization
+     - POST /orgs
+     - Creates a new organization. Requires an authenticated user; the creator becomes its owner. See [Authorization](#authorization) and [Error Model](#error-model). 
+     - Bearer Token:
+       - type: http
+       - name: bearerAuth
+     - parameter organizationCreate: (body)  
+     - returns: RequestBuilder<Organization> 
+     */
+    open class func orgsPostWithRequestBuilder(organizationCreate: OrganizationCreate) -> RequestBuilder<Organization> {
+        let localVariablePath = "/orgs"
+        let localVariableURLString = OptiOfficeSDKAPI.basePath + localVariablePath
+        let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: organizationCreate)
+
+        let localVariableUrlComponents = URLComponents(string: localVariableURLString)
+
+        let localVariableNillableHeaders: [String: Any?] = [
+            "Content-Type": "application/json",
+        ]
+
+        let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
+
+        let localVariableRequestBuilder: RequestBuilder<Organization>.Type = OptiOfficeSDKAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
